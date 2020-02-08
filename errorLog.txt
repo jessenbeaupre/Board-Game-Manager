@@ -1,0 +1,10 @@
+Sat Nov 30 14:27:59 CST 2019: com.microsoft.sqlserver.jdbc.SQLServerException: Invalid object name 'Gamess'.
+Sat Nov 30 14:28:04 CST 2019: com.microsoft.sqlserver.jdbc.SQLServerException: Invalid object name 'Gamess'.
+Sat Nov 30 14:28:14 CST 2019: com.microsoft.sqlserver.jdbc.SQLServerException: Invalid object name 'Gamess'.
+Sat Nov 30 14:28:15 CST 2019: com.microsoft.sqlserver.jdbc.SQLServerException: Invalid object name 'Gamess'.
+Wed Dec 11 14:14:53 CST 2019: java.sql.SQLException: No suitable driver found for jdbc:sqlserver://127.0.0.1:1433;databaseName=Java4Project;user=ProjectUser;password=P@55word;
+Wed Dec 11 14:25:28 CST 2019: java.sql.SQLException: No suitable driver found for jdbc:sqlserver://127.0.0.1:1433;databaseName=Java4Project;user=ProjectUser;password=P@55word;
+Wed Dec 11 14:30:52 CST 2019: com.microsoft.sqlserver.jdbc.SQLServerException: The TCP/IP connection to the host 127.0.0.1, port 1433 has failed. Error: "connect timed out. Verify the connection properties. Make sure that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port. Make sure that TCP connections to the port are not blocked by a firewall.".
+Sat Feb 01 19:30:52 CST 2020: com.microsoft.sqlserver.jdbc.SQLServerException: Incorrect syntax near '='.
+Sat Feb 01 19:35:05 CST 2020: com.microsoft.sqlserver.jdbc.SQLServerException: Incorrect syntax near '2'.
+Sat Feb 01 19:37:46 CST 2020: com.microsoft.sqlserver.jdbc.SQLServerException: There are fewer columns in the INSERT statement than values specified in the VALUES clause. The number of values in the VALUES clause must match the number of columns specified in the INSERT statement.

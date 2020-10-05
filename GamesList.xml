@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GameList>
+	<Game Title="Chess">
+		<Players>2-2</Players>
+		<Themes>old school</Themes>
+		<Mechanics>Fixed Movement</Mechanics>
+		<SetupTime>1</SetupTime>
+		<ApproxPlayTime>20</ApproxPlayTime>
+		<Comments> </Comments>
+		<GameID>1</GameID>
+	</Game>
+	<Game Title="Chess3">
+		<Players>3-5</Players>
+		<Themes>new school</Themes>
+		<Mechanics>Fixed Movement</Mechanics>
+		<SetupTime>10</SetupTime>
+		<ApproxPlayTime>60</ApproxPlayTime>
+		<Comments> </Comments>
+		<GameID>2</GameID>
+	</Game>
+</GameList>

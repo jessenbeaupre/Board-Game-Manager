@@ -38,17 +38,23 @@ public class BoardGameUI implements Runnable{
     private Container contentPane;
     private SpringLayout spLayout;
 
+    private XMLHandler xmlHandler;
+
     private static JFrame gameFrame;
 
-    BoardGameUI(BoardGame bg){
+    BoardGameUI(BoardGame bg, XMLHandler xmlHandler)
+    {
 
         game = bg;
+        this.xmlHandler = xmlHandler;
         imageIcon = new ImageIcon(game.loadImage());
     }
 
-    BoardGameUI(){
+    BoardGameUI(XMLHandler xmlHandler)
+    {
         //sets some default empty values to avoid errors
         game = new BoardGame();
+        this.xmlHandler = xmlHandler;
         imageIcon = new ImageIcon(game.loadImage());
         }
 
@@ -68,7 +74,7 @@ public class BoardGameUI implements Runnable{
     }
 
     private void createFrame(){
-        gameFrame = new JFrame("Board Game Name"); //initializes and titles the window
+        gameFrame = new JFrame(game.getTitle()); //initializes and titles the window
         gameFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); //sets the x button to terminate the program
         gameFrame.setSize(600  ,800); //sets starting dimensions
         gameFrame.setVisible(true); //need here as well as later or the font area has a null pointer exception
@@ -289,28 +295,41 @@ public class BoardGameUI implements Runnable{
 
     private void savePressed(){
         //creats a new local database handler
-        DatabaseHandler dbh = new DatabaseHandler();
+        //DatabaseHandler dbh = new DatabaseHandler();
+
+        //XMLHandler xmlHandler = new XMLHandler();
 
         //creates values from all the textfields to be sent to the save method on the handler
-        String[] playersMinMax;
-        playersMinMax = playersField.getText().split("-", 2);
-        playersMinMax[0] = dbh.purgeNumberInput(playersMinMax[0]);
-        playersMinMax[1] = dbh.purgeNumberInput(playersMinMax[1]);
-
+        String[] playersMinMax = new String[2];
+        if (playersField.getText().contains("-"))
+        {
+            playersMinMax = playersField.getText().split("-", 2);
+            playersMinMax[0] = xmlHandler.purgeNumberInput(playersMinMax[0]);
+            playersMinMax[1] = xmlHandler.purgeNumberInput(playersMinMax[1]);
+        }
+        else
+        {
+            playersMinMax[0] = xmlHandler.purgeNumberInput(playersField.getText());
+            playersMinMax[1] = xmlHandler.purgeNumberInput(playersField.getText());
+        }
         game.setTitle(titleField.getText());
         game.setPlayers(playersMinMax[0] + "-" + playersMinMax[1]);
         game.setThemes(themesField.getText());
         game.setMechanics(mechanicsField.getText());
-        game.setSetupTime(dbh.purgeNumberInput(setupTimeField.getText()));
-        game.setApproxPlayTime(dbh.purgeNumberInput(approxPlayTimeField.getText()));
-        game.setComments(commentsArea.getText());
+        game.setSetupTime(xmlHandler.purgeNumberInput(setupTimeField.getText()));
+        game.setApproxPlayTime(xmlHandler.purgeNumberInput(approxPlayTimeField.getText()));
 
-        //adds all those values to an array
-        String[] data = new String[]{game.getTitle(), playersMinMax[0], playersMinMax[1], game.getThemes(),
-                game.getMechanics(), game.getSetupTime(), game.getApproxPlayTime(), game.getComments(), game.getGameID()};
-
+        if (!game.getComments().equals(""))
+        {
+            game.setComments(commentsArea.getText());
+        }
+        else
+        {
+            game.setComments(" ");
+        }
         //calls the update method with the data string
-        dbh.updateData(game);
+        //dbh.updateData(game);
+        xmlHandler.saveGames(game);
 
         //calls cancel to refresh the ui
         cancelPressed();

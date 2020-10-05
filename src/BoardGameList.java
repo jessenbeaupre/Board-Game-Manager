@@ -6,6 +6,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,25 +41,33 @@ public class BoardGameList {
     private JButton searchButton;
     private ExecutorService threadPool;
 
-    private DatabaseHandler dbh;
+    //private DatabaseHandler dbh;
+    private XMLHandler xmlHandler;
 
     private int tableRowSelected;
 
-    //sample data for the dummy app, will be replaced with database pulls later
-    private BoardGame[] boardGameList;
-    private String column[]={"Title","Players","Theme", "Mechanics", "Setup Time", "Approx. play Time"};
+    private ArrayList<BoardGame> boardGames;
+    private String columnNames[]={"Title","Players","Theme", "Mechanics", "Setup Time", "Approx. play Time"};
 
     private BoardGameList(){
 
-        //creates and initializes the database handler so the shared variables are accessable
+        /*//creates and initializes the database handler so the shared variables are accessable
         dbh = new DatabaseHandler();
         dbh.initialize();
 
         //fills the array of data with the results of a query
-        boardGameList = dbh.getData();
+        boardGames = dbh.getData();
 
         //asserts that data retrieval was not problematic
-        assert (boardGameList != null);
+        assert (boardGames != null);
+        */
+
+
+
+        //creates the xml handler for pulling from and saving to a file
+        xmlHandler = new XMLHandler();
+
+        boardGames = xmlHandler.loadGames();
 
         //creates all the components for the ui
         createFrame();
@@ -105,7 +114,6 @@ public class BoardGameList {
     private void createTable(){
         //created it as an anonymous inner class that disables editing the rows directly through the board game list by
         //overwriting the isCellEditable method to always return false so the edit pages will have to be used
-        assert (boardGameList.length > 0);
         gameTable = new JTable(){
             public boolean isCellEditable(int rowIndex, int colIndex) {
                 return false;   //Disallow the editing of any cell directly through the list
@@ -115,9 +123,9 @@ public class BoardGameList {
         //creates a table model so the data is easier to edit later and sets that table model to the table then adds data to it
         tableModel = new DefaultTableModel();
         gameTable.setModel(tableModel);
-        //adds the column values so they exist on the first itteration of the program
+        //adds the columnNames values so they exist on the first itteration of the program
         tableModel.setColumnCount(0);
-        for (String c: column) {
+        for (String c: columnNames) {
             tableModel.addColumn(c);
         }
 
@@ -300,22 +308,20 @@ public class BoardGameList {
     private void openActionPerformed(){
 
         //sends a new instance of the boardgame class with data to the threadpool
-        threadPool.execute(new BoardGameUI(boardGameList[tableRowSelected]));
+        threadPool.execute(new BoardGameUI(boardGames.get(tableRowSelected), xmlHandler));
     }
 
     private void addNewActionPerformed(){
         //creates a board game instance with blank fields and sends it to the thread pool
-        threadPool.execute(new BoardGameUI());
+        threadPool.execute(new BoardGameUI(xmlHandler));
     }
 
     private void refreshGamesListData(){
 
-        //resets the data array with up to date data
-        boardGameList = dbh.getData();
-
-        //delets the current rows by setting them to 0 and adds all the rows from the data pull
+        boardGames = xmlHandler.getBoardGameList();
+        //deletes the current rows by setting them to 0 and adds all the rows from the data pull
         tableModel.setRowCount(0);
-        for (BoardGame game : boardGameList) {
+        for (BoardGame game : boardGames) {
             String[] dataLine = {game.getTitle(), game.getPlayers(), game.getThemes(), game.getMechanics(), game.getSetupTime() + "m", game.getApproxPlayTime() + "m"};
             tableModel.addRow(dataLine);
         }
@@ -326,8 +332,28 @@ public class BoardGameList {
     }
 
     private void searchGamesList(){
-        //pulls a more easily searchable set of data from the handler
-        ArrayList<Map<String, String>> searchData = dbh.getSearchData();
+
+        ArrayList<Map<String, String>> searchData = new ArrayList<>();
+
+        //loops through all the results and adds the values to a local map variable then adds it to the results list
+        for (BoardGame game:boardGames
+             )
+        {
+            Map<String, String> map = new HashMap<>();
+
+            map.put("title", game.getTitle());
+            map.put("playersMin", game.getPlayersMin());
+            map.put("playersMax",  game.getPlayersMax());
+            map.put("themes", game.getThemes());
+            map.put("mechanics", game.getMechanics());
+            map.put("setupTime", game.getSetupTime());
+            map.put("playTime", game.getApproxPlayTime());
+            map.put("comments", game.getComments());
+            map.put("gameID", game.getGameID());
+
+            searchData.add(map);
+        }
+
         //makes an arraylist of strings for the data that gets past the filter
         ArrayList<String[]> filteredData = new ArrayList<>();
 
@@ -341,7 +367,7 @@ public class BoardGameList {
         //creates a loop to go through all the elements of the unsorted data
         for (Map<String, String> map : searchData) {
             //Checks search component variables relative to their data counterpart or ignores it if the search component
-            // hasn't been changed or is at it's default vlue
+            // hasn't been changed or is at it's default value
             if (    //checks that the player count is between the min and max
                     (Integer.parseInt(map.get("playersMin")) <= playersCheck &&
                     Integer.parseInt(map.get("playersMax")) >= playersCheck || playersCheck == 0) &&
@@ -382,12 +408,12 @@ public class BoardGameList {
 
     private void deleteSelectedGame(){
         //checks that there is a row selected and it won't cause an array out of bounds exception
-        if (gameTable.getSelectedRow() > 0 && gameTable.getSelectedRow() < boardGameList.length){
+        if (gameTable.getSelectedRow() > 0 && gameTable.getSelectedRow() < boardGames.size()){
             //if it's a valid selection pop up a dialog box to be sure that they want to delete the data and calls to delete if yes is selected
-            if (JOptionPane.showConfirmDialog(null, ("Are you sure you want to delete: " + boardGameList[gameTable.getSelectedRow()].getTitle() + "?"), "WARNING",
+            if (JOptionPane.showConfirmDialog(null, ("Are you sure you want to delete: " + boardGames.get(gameTable.getSelectedRow()).getTitle() + "?"), "WARNING",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 //calls to delete and refreshes the table after the delete
-                dbh.deleteData(boardGameList[gameTable.getSelectedRow()].getGameID());
+                xmlHandler.deleteGame(boardGames.get(gameTable.getSelectedRow()));
                 refreshGamesListData();
             }
 
@@ -397,21 +423,21 @@ public class BoardGameList {
     }
 
     private void resizeColumnWidth(JTable table) {
-        //creates a column model to allow the data to be formatted well
+        //creates a columnNames model to allow the data to be formatted well
         final TableColumnModel columnModel = table.getColumnModel();
-        //creates a loop that for each column checks what the cell renderer
-        //will show up as the max preferred size from each row and set that to the column preferred max
+        //creates a loop that for each columnNames checks what the cell renderer
+        //will show up as the max preferred size from each row and set that to the columnNames preferred max
         for (int column = 0; column < table.getColumnCount(); column++) {
             int width = 20; // Min width
             for (int row = 0; row < table.getRowCount(); row++) {
-                TableCellRenderer renderer = table.getCellRenderer(row, column); //gets the cell rendered for the current column and row
+                TableCellRenderer renderer = table.getCellRenderer(row, column); //gets the cell rendered for the current columnNames and row
                 Component comp = table.prepareRenderer(renderer, row, column); //creates a component to test the renderer
                 width = Math.max(comp.getPreferredSize().width +1 , width); //uses the rendered to set width to the new max preferred size of the cell if it's larger than the current
             }
             if(width > 300) {
                 width = 300; //sets the width to 300 if it's too large
             }
-            columnModel.getColumn(column).setPreferredWidth(width); //sets the preferred width for the column from the result of the previous loops
+            columnModel.getColumn(column).setPreferredWidth(width); //sets the preferred width for the columnNames from the result of the previous loops
         }
     }
 
@@ -419,4 +445,5 @@ public class BoardGameList {
         //creates a new instance of itself when the program is run
         new BoardGameList();
     }
+
 }

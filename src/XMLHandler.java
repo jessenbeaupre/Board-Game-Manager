@@ -201,7 +201,7 @@ public class XMLHandler
             eventWriter.add(gamesListStartElement);
             eventWriter.add(newLine);
 
-            for(int i = 0; i < boardGameList.size()-1; i++)
+            for(int i = 0; i < boardGameList.size(); i++)
             {
                 try
                 {

@@ -2,20 +2,47 @@
 <GameList>
 	<Game Title="Chess">
 		<Players>2-2</Players>
-		<Themes>old school</Themes>
-		<Mechanics>Fixed Movement</Mechanics>
+		<Themes>Old school</Themes>
+		<Mechanics>Grid Movement</Mechanics>
 		<SetupTime>1</SetupTime>
 		<ApproxPlayTime>20</ApproxPlayTime>
 		<Comments> </Comments>
 		<GameID>1</GameID>
 	</Game>
-	<Game Title="Chess3">
-		<Players>3-5</Players>
-		<Themes>new school</Themes>
-		<Mechanics>Fixed Movement</Mechanics>
-		<SetupTime>10</SetupTime>
-		<ApproxPlayTime>60</ApproxPlayTime>
+	<Game Title="7 Wonders: Duel">
+		<Players>2-2</Players>
+		<Themes>Midevil</Themes>
+		<Mechanics>City Building</Mechanics>
+		<SetupTime>5</SetupTime>
+		<ApproxPlayTime>45</ApproxPlayTime>
 		<Comments> </Comments>
 		<GameID>2</GameID>
+	</Game>
+	<Game Title="Maximum Apocalypse">
+		<Players>1-6</Players>
+		<Themes>Various Apocalypse Themes</Themes>
+		<Mechanics>Map discovery, Survival</Mechanics>
+		<SetupTime>15</SetupTime>
+		<ApproxPlayTime>90</ApproxPlayTime>
+		<Comments> </Comments>
+		<GameID>3</GameID>
+	</Game>
+	<Game Title="The Binding of Issac: 4 Souls">
+		<Players>2-4</Players>
+		<Themes>Biblical, video game inspired, Dark</Themes>
+		<Mechanics>Item managment, dice rolling, monster fighting</Mechanics>
+		<SetupTime>5</SetupTime>
+		<ApproxPlayTime>40</ApproxPlayTime>
+		<Comments> </Comments>
+		<GameID>4</GameID>
+	</Game>
+	<Game Title="Abyss">
+		<Players>2-5</Players>
+		<Themes>Underwater, Mythic</Themes>
+		<Mechanics>Card Drafting, Trading</Mechanics>
+		<SetupTime>8</SetupTime>
+		<ApproxPlayTime>60</ApproxPlayTime>
+		<Comments>Have all Expansions</Comments>
+		<GameID>5</GameID>
 	</Game>
 </GameList>

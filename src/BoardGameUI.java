@@ -199,38 +199,45 @@ public class BoardGameUI implements Runnable{
         titleLabel.setText("Title: ");
         spLayout.putConstraint(SpringLayout.WEST, titleField, 2, SpringLayout.EAST, titleLabel);
         spLayout.putConstraint(SpringLayout.NORTH, titleField, 0, SpringLayout.NORTH, titleLabel);
-        titleField.setPreferredSize(new Dimension((contentPane.getWidth() - titleLabel.getWidth() + titleField.getPreferredSize().width - rightPadding), titleField.getPreferredSize().height));
+        spLayout.putConstraint(SpringLayout.EAST, titleField, -10, SpringLayout.EAST, contentPane);
+        //titleField.setPreferredSize(new Dimension((contentPane.getWidth() - titleLabel.getWidth() + titleField.getPreferredSize().width - rightPadding), titleField.getPreferredSize().height));
         //players constraints
         playersLabel.setText("Players: ");
         spLayout.putConstraint(SpringLayout.WEST, playersField, 2, SpringLayout.EAST, playersLabel);
         spLayout.putConstraint(SpringLayout.NORTH, playersField, 0, SpringLayout.NORTH, playersLabel);
+        spLayout.putConstraint(SpringLayout.EAST, playersField, -10, SpringLayout.EAST, contentPane);
         playersField.setPreferredSize(new Dimension((contentPane.getWidth() - playersLabel.getWidth() + playersField.getPreferredSize().width - rightPadding), playersField.getPreferredSize().height));
         //themes constraints
         themesLabel.setText("Themes: ");
         spLayout.putConstraint(SpringLayout.WEST, themesField, 2, SpringLayout.EAST, themesLabel);
         spLayout.putConstraint(SpringLayout.NORTH, themesField, 0, SpringLayout.NORTH, themesLabel);
+        spLayout.putConstraint(SpringLayout.EAST, themesField, -10, SpringLayout.EAST, contentPane);
         themesField.setPreferredSize(new Dimension((contentPane.getWidth() - themesLabel.getWidth() + themesField.getPreferredSize().width - rightPadding), themesField.getPreferredSize().height));
         //mechanics constraints
         mechanicsLabel.setText("Mechanics: ");
         mechanicsLabel.updateUI();
         spLayout.putConstraint(SpringLayout.WEST, mechanicsField, 2, SpringLayout.EAST, mechanicsLabel);
         spLayout.putConstraint(SpringLayout.NORTH, mechanicsField, 0, SpringLayout.NORTH, mechanicsLabel);
+        spLayout.putConstraint(SpringLayout.EAST, mechanicsField, -10, SpringLayout.EAST, contentPane);
         mechanicsField.setPreferredSize(new Dimension((contentPane.getWidth() - mechanicsLabel.getWidth() + mechanicsField.getPreferredSize().width - rightPadding), mechanicsField.getPreferredSize().height));
         //setup constraints
         setupTimeLabel.setText("Setup time: ");
         spLayout.putConstraint(SpringLayout.WEST, setupTimeField, 2, SpringLayout.EAST, setupTimeLabel);
         spLayout.putConstraint(SpringLayout.NORTH, setupTimeField, 0, SpringLayout.NORTH, setupTimeLabel);
+        spLayout.putConstraint(SpringLayout.EAST, setupTimeField, -10, SpringLayout.EAST, contentPane);
         setupTimeField.setPreferredSize(new Dimension((contentPane.getWidth() - setupTimeLabel.getWidth() + setupTimeField.getPreferredSize().width - rightPadding), setupTimeField.getPreferredSize().height));
         //approx play constraints
         approxPlayTimeLabel.setText("Approximate play length: ");
         spLayout.putConstraint(SpringLayout.WEST, approxPlayTimeField, 2, SpringLayout.EAST, approxPlayTimeLabel);
         spLayout.putConstraint(SpringLayout.NORTH, approxPlayTimeField, 0, SpringLayout.NORTH, approxPlayTimeLabel);
+        spLayout.putConstraint(SpringLayout.EAST, approxPlayTimeField, -10, SpringLayout.EAST, contentPane);
         approxPlayTimeField.setPreferredSize(new Dimension((contentPane.getWidth() - approxPlayTimeLabel.getWidth() + approxPlayTimeField.getPreferredSize().width - rightPadding), approxPlayTimeField.getPreferredSize().height));
         //comments constraints
         commentsLabel.setText("Comments:\n");
         spLayout.putConstraint(SpringLayout.WEST, commentsPane, 5, SpringLayout.WEST, contentPane);
         spLayout.putConstraint(SpringLayout.NORTH, commentsPane, 2, SpringLayout.SOUTH, commentsLabel);
-        commentsPane.setPreferredSize(new Dimension((contentPane.getWidth() - rightPadding), (commentsArea.getPreferredSize().height) * 2));
+        spLayout.putConstraint(SpringLayout.EAST, commentsPane, -10, SpringLayout.EAST, contentPane);
+        commentsPane.setPreferredSize(new Dimension((contentPane.getWidth() - rightPadding), (commentsArea.getPreferredSize().height) * 2 + 100));
         //save button constraints
         spLayout.putConstraint(SpringLayout.WEST, saveButton, 5, SpringLayout.WEST, contentPane);
         spLayout.putConstraint(SpringLayout.NORTH, saveButton, 10, SpringLayout.SOUTH, commentsPane);
@@ -242,6 +249,8 @@ public class BoardGameUI implements Runnable{
         spLayout.putConstraint(SpringLayout.SOUTH, contentPane, 10, SpringLayout.SOUTH, cancelButton);
 
         editButton.setVisible(false);
+
+        gameFrame.setSize(gameFrame.getWidth(), gameFrame.getHeight() + 60);
 
         //creates and adds event listeners to the buttons
         ActionListener savePressed = e -> savePressed();
@@ -318,6 +327,7 @@ public class BoardGameUI implements Runnable{
         game.setMechanics(mechanicsField.getText());
         game.setSetupTime(xmlHandler.purgeNumberInput(setupTimeField.getText()));
         game.setApproxPlayTime(xmlHandler.purgeNumberInput(approxPlayTimeField.getText()));
+        game.setComments(commentsLabel.getText());
 
         if (!game.getComments().equals(""))
         {
@@ -348,7 +358,7 @@ public class BoardGameUI implements Runnable{
         contentPane.remove(saveButton);
         contentPane.remove(cancelButton);
 
-        //removes all normal elemts
+        //removes all normal elements
         contentPane.remove(imageRefLabel);
         contentPane.remove(imageButton);
         contentPane.remove(titleLabel);
@@ -359,6 +369,8 @@ public class BoardGameUI implements Runnable{
         contentPane.remove(approxPlayTimeLabel);
         contentPane.remove(commentsLabel);
         contentPane.remove(editButton);
+
+        gameFrame.setSize(gameFrame.getWidth(), gameFrame.getHeight() - 60);
 
         //recreates all the elements and paint the ui again with the new data
         createContent();

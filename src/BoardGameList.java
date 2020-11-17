@@ -105,7 +105,7 @@ public class BoardGameList {
 
     private void createFrame(){
         //creates the main ui window and sets it's starting dimensions
-        frame = new JFrame("Board Game Bonanza"); //initializes and titles the window
+        frame = new JFrame("Board Game Manager"); //initializes and titles the window
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //sets the x button to terminate the program
         frame.setSize(1280  ,720); //sets starting dimensions
         frame.setVisible(true); //need here as well as later or the font area has a null pointer exception
